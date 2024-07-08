@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Local Development</title>
+    
+        <!-- <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script> -->
+    
+        <style>
+          html,
+          body {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+          }
+    
+          #babylon-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            font-size: 0;
+            border: 1px solid red;
+          }
+        </style>
+      <script defer src="dist/main.js"></script></head>
+    <body>
+        <h1>Webpack! Webpack!</h1>
+        <h2>Tip: Check your console</h2>
+        <canvas id="babylon-canvas"></canvas>
+    </body>
+    
+    <!-- <script>
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+                navigator.serviceWorker
+                    .register("service-worker.js")
+                    .then((registration) => {
+                        console.log("Service Worker registered: ", registration);
+                    })
+                    .catch((registrationError) => {
+                        console.error("Service Worker registration failed: ", registrationError);
+                    });
+            });
+        }
+    </script> -->
+
+    <script src="/dist/main.js"></script>
+
+</html>

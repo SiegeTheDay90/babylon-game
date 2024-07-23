@@ -1,13 +1,14 @@
 // import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 
-import { ArcRotateCamera, Color3, FreeCamera, SceneLoader } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, FreeCamera, SceneLoader, StandardMaterial } from "@babylonjs/core";
+import "@babylonjs/loaders/glTF";
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { CreateSphere, CreateBox, CreateGround } from "@babylonjs/core/Meshes/Builders";
 import { Scene } from "@babylonjs/core/scene";
 
-import { GridMaterial } from "@babylonjs/materials/";
+import { FireMaterial, GridMaterial } from "@babylonjs/materials/";
 
 // Get the canvas element from the DOM.
 const canvas = document.getElementById("babylon-canvas");
@@ -21,19 +22,19 @@ var scene = new Scene(engine);
 let groundMesh, houseMeshes;
 
 // Load the House and Ground model
-SceneLoader.ImportMeshAsync("", "/models/", "both_houses_scene.babylon", scene).then((result) => {
+SceneLoader.ImportMeshAsync("ground", "/models/", "both_houses_scene.babylon", scene).then((result) => {
   groundMesh = result.meshes[0]; // 
   
-  houseMeshes = result.meshes.slice(1);
+  // houseMeshes = result.meshes.slice(1);
 
   // debugger;
 
-  if(!groundMesh || !houseMeshes.length) return;
+  // if(!groundMesh || !houseMeshes.length) return;
 
-  houseMeshes.forEach((house) => {
-    house.position.y = 1; // Move the model up a bit
-    house.scaling = new Vector3(1.5, 1.5, 1.5);
-  });
+  // houseMeshes.forEach((house) => {
+  //   house.position.y = 1; // Move the model up a bit
+  //   house.scaling = new Vector3(1.5, 1.5, 1.5);
+  // });
   groundMesh.position.y = 0.1;
   groundMesh.scaling = new Vector3(5, 1, 5);
 
@@ -67,29 +68,55 @@ light.intensity = 0.7;
 
 
 // Ground
-var ground = CreateGround("ground", { width: 25, height: 25, subdivisions: 4 }, scene);
+var hiddenGround = CreateGround("hiddenGround", { width: 25, height: 25, subdivisions: 4 }, scene);
 var groundMaterial = new GridMaterial("grid", scene);
-ground.material = groundMaterial;
+hiddenGround.material = groundMaterial;
 groundMaterial.mainColor = new Color3(0.9, 0.9, 0.9);
 groundMaterial.lineColor = Color3.Black();
-ground.visibility = 1;
+hiddenGround.visibility = 1;
 
 
 
 
 // Player 
-var cursor = CreateBox("cursor", { size: 1 }, scene);
+// var cursor = CreateBox("cursor", { size: 1 }, scene);
+let cursor;
+
+cursor = CreateBox("cursor", { }, scene);
+// console.log(result.meshes);
+
+// cursor.scale = new Vector3(5.1, 5.1, 5.5);
 var cursorMaterial = new GridMaterial("grid", scene);
-cursor.position.y = 5;
+cursor.position.y = 3;
 cursor.material = cursorMaterial;
 cursorMaterial.mainColor = Color3.Red();
 cursorMaterial.lineColor = Color3.Black();
+
+SceneLoader.ImportMeshAsync("", "/models/", "magnet.glb", scene).then((result) => {
+
+  // cursor = result.meshes[1];
+  // debugger;
+  console.log(result.meshes);
+  result.meshes.forEach((mesh, idx) => {
+    mesh.position = new Vector3(2, 2, 2);
+    // mesh.material = new FireMaterial("fire"+idx, scene);
+    
+  })
+
+
+  // (Optional) Access materials and textures of the loaded model (refer to Babylon.js documentation for details)
+  // importedMesh.material // Access the material of the loaded mesh
+})//.catch((error) => {
+//   console.error("Error loading model:", error);
+// });
+
+
 
 
 // Mouse Move Event
 canvas.addEventListener("mousemove", (event) => {
   var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-
+  // debugger;
   if (pickResult.hit && pickResult.pickedMesh.name === "ground") {
     var pickedPoint = pickResult.pickedPoint; // The point on the mesh that was picked
     pickedPoint.y = 1;
